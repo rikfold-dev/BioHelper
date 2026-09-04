@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RP-Биография</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #e8e8f0;
+            position: relative;
+            overflow: hidden;
+            /* ===== ЧЁРНО-БЕЛЫЙ АНИМИРОВАННЫЙ ГРАДИЕНТ ===== */
+            background: linear-gradient(135deg, #0a0a0a 0%, #4a4a4a 50%, #0a0a0a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 12s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(30, 30, 50, 0.88);
+            padding: 30px;
+            border-radius: 24px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* ===== АНИМИРОВАННЫЙ ГРАДИЕНТНЫЙ ЗАГОЛОВОК ===== */
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            font-weight: 900;
+            letter-spacing: 0.06em;
+            background: linear-gradient(90deg, #ff8c00 0%, #ffffff 30%, #ff8c00 60%, #ffffff 90%, #ff8c00 100%);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 6s ease-in-out infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== ТРИ КОЛОНКИ ===== */
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        .column {
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            padding: 18px 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .column h3 {
+            color: #ffd966;
+            font-weight: 500;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+            border-left: 4px solid #ffd966;
+            padding-left: 12px;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            font-size: 0.85rem;
+            color: #b0b0c8;
+            margin-bottom: 3px;
+        }
+        label .required {
+            color: #ff6b6b;
+            margin-left: 4px;
+        }
+        input, .static-field {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.04);
+            color: #e8e8f0;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        input:focus {
+            border-color: #ffd966;
+            background: rgba(255,215,100,0.06);
+        }
+        .static-field {
+            background: rgba(255,255,255,0.02);
+            color: #a0a0b8;
+            cursor: default;
+        }
+
+        /* ===== КРАСИВЫЙ FILE INPUT ===== */
+        .file-upload-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .file-upload-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .file-upload-btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background: rgba(255,215,100,0.12);
+            border: 1px solid rgba(255,215,100,0.3);
+            border-radius: 30px;
+            color: #ffd966;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .file-upload-btn:hover {
+            background: rgba(255,215,100,0.25);
+        }
+        .file-name {
+            color: #9090a8;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 120px;
+        }
+
+        /* ===== ТЕКСТ "В СКОРОМ ВРЕМЕНИ..." ===== */
+        .contact-note {
+            margin-top: 12px;
+            padding: 10px 12px;
+            background: rgba(255,215,100,0.06);
+            border-radius: 10px;
+            border: 1px solid rgba(255,215,100,0.1);
+            text-align: center;
+            color: #d0d0e0;
+            font-size: 0.9rem;
+        }
+        .contact-note strong {
+            color: #ffd966;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #ffd966;
+            color: #1a1a2e;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 20px;
+        }
+        .btn-submit:hover {
+            background: #f0c44a;
+            transform: scale(1.02);
+        }
+        #status {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.95rem;
+            min-height: 1.5em;
+        }
+
+        @media (max-width: 750px) {
+            .columns {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .file-name { max-width: 100px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>RP-Биография</h2>
+        <form id="bioForm" enctype="multipart/form-data">
+
+            <div class="columns">
+                <!-- ===== КОЛОНКА 1 ===== -->
+                <div class="column">
+                    <h3>Основная информация</h3>
+                    <div class="form-group">
+                        <label>Ф. И. <span class="required">*</span></label>
+                        <input type="text" id="name" placeholder="Иван Иванов" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пол <span class="required">*</span></label>
+                        <input type="text" id="gender" placeholder="Мужской / Женский" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Возраст <span class="required">*</span></label>
+                        <input type="number" id="age" placeholder="25" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Дата рождения <span class="required">*</span></label>
+                        <input type="text" id="birthdate" placeholder="01.01.2000" required>
+                    </div>
+                </div>
+
+                <!-- ===== КОЛОНКА 2 ===== -->
+                <div class="column">
+                    <h3>Внешние признаки</h3>
+                    <div class="form-group">
+                        <label>Национальность</label>
+                        <div class="static-field">Американец.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Рост</label>
+                        <div class="static-field">175 см.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Цвет волос <span class="required">*</span></label>
+                        <input type="text" id="hair_color" placeholder="Блондин" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Цвет глаз <span class="required">*</span></label>
+                        <input type="text" id="eye_color" placeholder="Карие" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Телосложение <span class="required">*</span></label>
+                        <input type="text" id="build" placeholder="Атлетическое" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Татуировки</label>
+                        <input type="text" id="tattoos" placeholder="Описание (если есть)">
+                    </div>
+                </div>
+
+                <!-- ===== КОЛОНКА 3 ===== -->
+                <div class="column">
+                    <h3>Дополнение</h3>
+                    <div class="form-group">
+                        <label>📸 Фото персонажа в весь рост <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="photo_full" accept="image/*" required>
+                            <span class="file-upload-btn">Выбрать файл</span>
+                            <span class="file-name" id="photo_full_name">Файл не выбран</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>🪪 Фото паспорта <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="photo_passport" accept="image/*" required>
+                            <span class="file-upload-btn">Выбрать файл</span>
+                            <span class="file-name" id="photo_passport_name">Файл не выбран</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Ваш Discord <span class="required">*</span></label>
+                        <input type="text" id="discord" placeholder="@username" required>
+                    </div>
+
+                    <!-- ТЕКСТ В СКОРОМ ВРЕМЕНИ -->
+                    <div class="contact-note">
+                        <strong>В скором времени с вами свяжется <span style="color: #ffd966;">cute_otter_94973_49668 (𝗦ⲕⲩ)</span></strong>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">📤 Отправить в Discord</button>
+            <div id="status"></div>
+        </form>
+    </div>
+
+    <script>
+        // Отображение имён выбранных файлов
+        document.getElementById('photo_full').addEventListener('change', function() {
+            document.getElementById('photo_full_name').textContent = this.files[0] ? this.files[0].name : 'Файл не выбран';
+        });
+        document.getElementById('photo_passport').addEventListener('change', function() {
+            document.getElementById('photo_passport_name').textContent = this.files[0] ? this.files[0].name : 'Файл не выбран';
+        });
+
+        document.getElementById('bioForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Собираем данные
+            const name = document.getElementById('name').value.trim();
+            const gender = document.getElementById('gender').value.trim();
+            const age = document.getElementById('age').value.trim();
+            const birthdate = document.getElementById('birthdate').value.trim();
+            const hair = document.getElementById('hair_color').value.trim();
+            const eyes = document.getElementById('eye_color').value.trim();
+            const build = document.getElementById('build').value.trim();
+            const tattoos = document.getElementById('tattoos').value.trim() || 'Отсутствуют';
+            const discord = document.getElementById('discord').value.trim();
+
+            const photoFull = document.getElementById('photo_full').files[0];
+            const photoPassport = document.getElementById('photo_passport').files[0];
+
+            const statusDiv = document.getElementById('status');
+
+            // Валидация
+            if (!name || !gender || !age || !birthdate || !hair || !eyes || !build || !discord) {
+                statusDiv.textContent = '❌ Заполните все обязательные поля (отмечены *).';
+                statusDiv.style.color = '#ff6b6b';
+                return;
+            }
+            if (!photoFull) {
+                statusDiv.textContent = '❌ Прикрепите фото персонажа в полный рост.';
+                statusDiv.style.color = '#ff6b6b';
+                return;
+            }
+            if (!photoPassport) {
+                statusDiv.textContent = '❌ Прикрепите фото паспорта.';
+                statusDiv.style.color = '#ff6b6b';
+                return;
+            }
+
+            // Формируем embed
+            const embed = {
+                embeds: [{
+                    title: '📝 Новая анкета',
+                    color: 0xff8c00,
+                    fields: [
+                        {
+                            name: 'Основная информация',
+                            value: `👤 Ф. И.: ${name}\n⚥ Пол: ${gender}\n🎂 Возраст: ${age}\n📅 Дата рождения: ${birthdate}`,
+                            inline: false
+                        },
+                        {
+                            name: 'Внешние признаки',
+                            value: `🌍 Национальность: Американец.\n📏 Рост: 175 см.\n💇 Цвет волос: ${hair}\n👁️ Цвет глаз: ${eyes}\n💪 Телосложение: ${build}\n🎨 Татуировки: ${tattoos}`,
+                            inline: false
+                        },
+                        {
+                            name: 'Дополнение',
+                            value: `🆔 Ваш Discord: ${discord}\n\n📸 Фото персонажа и фото паспорта приложены.\n\nВ скором времени с вами свяжется **cute_otter_94973_49668 (𝗦ⲕⲩ)**`,
+                            inline: false
+                        }
+                    ],
+                    footer: { text: 'Отправлено через сайт' },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            const formData = new FormData();
+            formData.append('payload_json', JSON.stringify(embed));
+            formData.append('file', photoFull, photoFull.name);
+            formData.append('file2', photoPassport, photoPassport.name);
+
+            const WEBHOOK_URL = 'https://discord.com/api/webhooks/1545456151452188672/KMyadLAaTF9pSyljzrHxXnzTTW8HSLSd-llwtx6N400AHMstx2smMm91U0P51Bp9ZwB4';
+
+            try {
+                statusDiv.textContent = '⏳ Отправка...';
+                statusDiv.style.color = '#ffd966';
+
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    statusDiv.textContent = '✅ Анкета отправлена!';
+                    statusDiv.style.color = '#7ddf9a';
+                    document.getElementById('bioForm').reset();
+                    document.getElementById('photo_full_name').textContent = 'Файл не выбран';
+                    document.getElementById('photo_passport_name').textContent = 'Файл не выбран';
+                } else {
+                    throw new Error('Ошибка при отправке');
+                }
+            } catch (error) {
+                statusDiv.textContent = '❌ Не удалось отправить. Проверьте соединение.';
+                statusDiv.style.color = '#ff6b6b';
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
